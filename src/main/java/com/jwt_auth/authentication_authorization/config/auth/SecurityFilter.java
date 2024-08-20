@@ -1,21 +1,27 @@
 package com.jwt_auth.authentication_authorization.config.auth;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
+
+import com.jwt_auth.authentication_authorization.repositories.UserRepository;
+
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 @Component
 public class SecurityFilter extends OncePerRequestFilter {
 
+
+    
     @Autowired
     private TokenProvider tokenService;
 
@@ -29,7 +35,7 @@ public class SecurityFilter extends OncePerRequestFilter {
         if (token != null) {
             String login = tokenService.validateToken(token);
             if (login != null) {
-                var user = UserRepository.findByLogin(login);
+                var user = userRepository.findByLogin(login);
                 if (user != null) {
                     Authentication authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
                     SecurityContextHolder.getContext().setAuthentication(authentication);

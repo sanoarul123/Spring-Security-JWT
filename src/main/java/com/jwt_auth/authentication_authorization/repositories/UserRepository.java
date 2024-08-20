@@ -8,3 +8,4 @@ import com.jwt_auth.authentication_authorization.entities.User;
 public interface UserRepository extends JpaRepository<User, Long> {
     UserDetails findByLogin(String login);
 }
+
